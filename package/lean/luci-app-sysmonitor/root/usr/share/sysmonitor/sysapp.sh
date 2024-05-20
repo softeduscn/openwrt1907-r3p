@@ -648,7 +648,7 @@ prog_list)
 	button=$button'</font>'
 	;;
 vpn_list)
-	button='<button class=button1><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=CloseVPN&redir=host">CloseVPN</a></button><BR><BR>'
+	button='<button class=button1 title="Close VPN"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=CloseVPN&redir=host">CloseVPN</a></button><BR><BR>'
 	gateway=$(uci get network.wan.gateway)
 	while read i
 	do
@@ -661,7 +661,7 @@ vpn_list)
 		button=$button'<a href="http://'$host'" target="_blank">'$(echo $i|cut -d'-' -f1-2)
 		button=$button'<font color='$color'>'
 		button=$button' '$(echo $i|cut -d'-' -f4-)'</font></a>'
-		[ "$color" == 'grey' ] && button=$button' <button class="button1"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=selVPN&redir=host&sys1='$ip'">Sel->'$host'</a></button>'
+		[ "$color" == 'grey' ] && button=$button' <button class="button1" title="Select '$host' for VPN service"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=selVPN&redir=host&sys1='$ip'">Sel->'$host'</a></button>'
 		button=$button'<BR>'
 	done < /tmp/regvpn
 	;;
@@ -684,30 +684,30 @@ button)
 	if [ -f /etc/init.d/smartdns ]; then
 		if [ "$(uci_get_by_name $NAME $NAME dns 'SmartDNS')" == 'SmartDNS' ]; then
 			if [ ! -n "$(pgrep -f smartdns)" ]; then
-				button=$button' <button class=button2><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=smartdns&redir=settings">SmartDNS</a></button>'
+				button=$button' <button class=button2 title="SmartDNS is not ready...,Restart"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=smartdns&redir=settings">SmartDNS</a></button>'
 			else
-				button=$button' <button class=button1><a href="/cgi-bin/luci/admin/services/smartdns" target="_blank">SmartDNS</a></button>'
+				button=$button' <button class=button1 title="Goto SmartDNS setting"><a href="/cgi-bin/luci/admin/services/smartdns" target="_blank">SmartDNS</a></button>'
 			fi
 		else
 			if [ "$(uci_get_by_name $NAME $NAME vpntype 'NULL')" == 'NULL' ]; then
-				button=$button' <button class=button3><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=smartdns&redir=settings">SmartDNS</a></button>'
+				button=$button' <button class=button3 title="Start SmartDNS"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=smartdns&redir=settings">SmartDNS</a></button>'
 			else
-				button=$button' <button class=button3><a href="/cgi-bin/luci/admin/services/smartdns" target="_blank">SmartDNS</a></button>'
+				button=$button' <button class=button3 title="Start SmartDNS"><a href="/cgi-bin/luci/admin/services/smartdns" target="_blank">SmartDNS</a></button>'
 			fi
 		fi
 	fi
 	if [ -f /etc/init.d/mosdns ]; then
 		if [ "$(uci_get_by_name $NAME $NAME dns 'MosDNS')" == 'MosDNS' ]; then
 			if [ ! -n "$(pgrep -f mosdns)" ]; then
-				button=$button' <button class=button2><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=mosdns&redir=settings">MosDNS</a></button>'
+				button=$button' <button class=button2 title="MosDNS is not ready...,Restart"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=mosdns&redir=settings">MosDNS</a></button>'
 			else
-				button=$button' <button class=button1><a href="/cgi-bin/luci/admin/services/mosdns" target="_blank">MosDNS</a></button>'
+				button=$button' <button class=button1 "Goto MosDNS setting"><a href="/cgi-bin/luci/admin/services/mosdns" target="_blank">MosDNS</a></button>'
 			fi
 		else
 			if [ "$(uci_get_by_name $NAME $NAME vpntype 'NULL')" == 'NULL' ]; then
-				button=$button' <button class=button3><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=mosdns&redir=settings">MosDNS</a></button>'
+				button=$button' <button class=button3 title="Start MosDNS"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=mosdns&redir=settings">MosDNS</a></button>'
 			else
-				button=$button' <button class=button3><a href="/cgi-bin/luci/admin/services/mosdns" target="_blank">MosDNS</a></button>'
+				button=$button' <button class=button3 title="Start MosDNS"><a href="/cgi-bin/luci/admin/services/mosdns" target="_blank">MosDNS</a></button>'
 			fi
 		fi
 	fi
@@ -720,7 +720,7 @@ wantitle)
 	gateway=$(uci get network.wan.gateway)
 	vpn=$(uci_get_by_name $NAME $NAME vpnip '192.168.1.1')
 	if [ "$vpn" == $gateway ]; then
-		button='<button class=button1><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=CloseVPN&redir=settings">CloseVPN</a></button>'
+		button='<button class=button1 title="Close VPN"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=CloseVPN&redir=settings">CloseVPN</a></button>'
 	fi
 	;;
 wan)
@@ -740,7 +740,7 @@ wan)
 	fi
 	;;
 vpnstitle)
-	button='<button class="button1"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=UpdateVPN&redir=settings">UpdateVPN</a></button>'
+	button='<button class="button1" title="Update VPN connection"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=UpdateVPN&redir=settings">UpdateVPN</a></button>'
 	;;
 vpns)
 	button=''
@@ -757,13 +757,14 @@ vpns)
 			name=${name:2}
 			color='grey'
 			[ "$sign" == 0 ] && color='red'
+			button=$button'<button class="button1" title="Goto '$host' setting"><a href="http://'$host'" target="_blank">Goto ->'$host'</a></button> '
 			if [ "$gateway" == $ip ]; then
-				color='green'
-				button=$button'<a href="http://'$host'" target="_blank">('$ip'-'$host')</a> <font color='$color'>'$name'</font>'
+				color='green'			
+				button=$button'<font color='$color'>'$ip'-'$host'-'$name'</font>'
 				button=$button'<BR>'
 			else
-				button=$button'<a href="http://'$host'" target="_blank">('$ip'-'$host')</a> <font color='$color'>'$name'</font> '
-				button=$button'<button class="button1"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=selVPN&redir=settings&sys1='$ip'">Sel->'$host'</a></button><BR>'
+				button=$button'<font color='$color'>'$ip'-'$host'-'$name'</font> '
+				button=$button'<button class="button1" title="Select '$host' for VPN service"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=selVPN&redir=settings&sys1='$ip'">Sel->'$host'</a></button><BR>'
 			fi
 		fi
 	done < /tmp/regvpn
