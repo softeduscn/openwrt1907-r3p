@@ -413,7 +413,7 @@ sysupgrade() {
 			echo 'Upgrade Firmware' > $SYSLOG
 		fi
 		echo '------------------------------------------------------------------------------------------------------' >> $SYSLOG
-		sysupgrade='sysupgrade '$1' /tmp/upload/'$file
+		sysupgrade='sysupgrade '$1' /tmp/upload/'$file		
 		echo $sysupgrade >> $SYSLOG
 		$sysupgrade
 	else
@@ -822,7 +822,7 @@ sysmenu() {
 		firmware
 		;;
 	sysupgrade)
-		sysupgrade
+		sysupgrade $2
 		;;
 	ddns)
 		/etc/init.d/ddns start &
