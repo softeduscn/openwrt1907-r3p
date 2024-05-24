@@ -372,7 +372,7 @@ stopdl() {
 	[ -n "$dl" ] && kill $dl
 	firmware=$(uci_get_by_name $NAME $NAME firmware)
 	tmp=$(echo $firmware|cut -d'/' -f 9)
-	rm /tmp/upload/$tmp
+	[ -f /tmp/upload/$tmp ] && rm /tmp/upload/$tmp
 }
 
 firmware() {
@@ -390,9 +390,28 @@ firmware() {
 		sed -i '/Download Firmware/a\****** Download Firmware is OK.Please Upgrade '$tmp $SYSLOG
 		sed -i '/Download Firmware/a\ ' $SYSLOG
 	else
-		rm /tmp/upload/$tmp
+		[ -f /tmp/upload/$tmp ] && rm /tmp/upload/$tmp
 		sed -i '/Download Firmware/,$d' $SYSLOG
 		echolog "Download Firmware is error! please use vpn & try again."
+	fi
+}
+
+sysupgrade() {
+	file=$(ls /tmp/upload|grep $device)
+	if [ -n "$file" ]; then
+		if [ "$1" == "-c" ]; then
+			echo 'Upgrade Firmware (keep config)' > $SYSLOG
+		else
+			echo 'Upgrade Firmware' > $SYSLOG
+		fi
+		echo '------------------------------------------------------------------------------------------------------' >> $SYSLOG
+		sysupgrade='sysupgrade '$1' /tmp/upload/'$file
+		echo $sysupgrade >> $SYSLOG
+		$sysupgrade
+	else
+		sed -i '/Download Firmware/,$d' $SYSLOG
+		echolog "Download Firmware"
+		echolog "No sysupgrade file? Please upload $device sysupgrade file or download."
 	fi
 }
 
@@ -635,7 +654,7 @@ prog)
 	do
 		program=$(uci get sysmonitor.@prog_list[$num].program)
 		name=$(uci get sysmonitor.@prog_list[$num].name)
-		button=$button' <button class=button1><a href="prog?prog='$program'">'$name'</a></button>'
+		button=$button' <button class=button1><a href="sysmenu?sys='$program'&redir=general">'$name'</a></button>'
 		num=$((num+1))
 	done
 	;;
@@ -648,7 +667,7 @@ prog_list)
 	button=$button'</font></B>'
 	;;
 vpn_list)
-	button='<button class=button1 title="Close VPN"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=CloseVPN&redir=host">CloseVPN</a></button><BR><BR>'
+	button='<button class=button1 title="Close VPN"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=CloseVPN&redir=host">CloseVPN</a></button><BR><BR>'
 	gateway=$(uci get network.wan.gateway)
 	while read i
 	do
@@ -661,7 +680,7 @@ vpn_list)
 		button=$button'<button class="button1" title="Goto '$host' setting"><a href="http://'$host'" target="_blank">Goto ->'$host'</a></button> '
 		button=$button'<B><font color='$color'>'
 		button=$button$(echo ${i:1}|cut -d'-' -f1)' '$(echo $i|cut -d'-' -f4-)'</font></B>'
-		[ "$color" == '#3D3476' ] && button=$button' <button class="button1" title="Select '$host' for VPN service"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=selVPN&redir=host&sys1='$ip'">Sel->'$host'</a></button>'
+		[ "$color" == '#3D3476' ] && button=$button' <button class="button1" title="Select '$host' for VPN service"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu1?sys=selVPN&redir=host&sys1='$ip'">Sel->'$host'</a></button>'
 		button=$button'<BR>'
 	done < /tmp/regvpn
 	;;
@@ -669,28 +688,28 @@ buttontitle)
 	redir='ddns'
 	[ "$(uci_get_by_name $NAME $NAME ddnslog 0)" == 1 ] && redir='log'
 #	button='<button class="button1"><a href="/cgi-bin/luci/admin/services/ttyd" target="_blank">Terminal</a></button>'
-	[ $(uci_get_by_name $NAME $NAME ddns 0) == 1 ] && [ $(uci_get_by_name $NAME $NAME vpntype 0) == 'VPN' ]  && button=$button'<br><button class="button1"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=UpdateDDNS&redir='$redir'">UpdateDDNS</a></button>'
+	[ $(uci_get_by_name $NAME $NAME ddns 0) == 1 ] && [ $(uci_get_by_name $NAME $NAME vpntype 0) == 'VPN' ]  && button=$button'<br><button class="button1"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=UpdateDDNS&redir='$redir'">UpdateDDNS</a></button>'
 	;;
 button)
 	button=''
 	if [ -f /etc/init.d/ddns ]; then
 		if [ ! -n "$(pgrep -f dynamic_dns)" ]; then
-			button=$button'<button class=button2><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=ddns&redir=settings">DDNS</a></button>'
+			button=$button'<button class=button2><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=ddns&redir=settings">DDNS</a></button>'
 		else
 			button=$button'<button class=button1><a href="/cgi-bin/luci/admin/services/ddns" target="_blank">DDNS</a></button>'
 		fi
 	fi
-#	button=$button' <button class="button1"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=CHNlist&redir=settings">CHNlist Update</a></button>'
+#	button=$button' <button class="button1"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=CHNlist&redir=settings">CHNlist Update</a></button>'
 	if [ -f /etc/init.d/smartdns ]; then
 		if [ "$(uci_get_by_name $NAME $NAME dns 'SmartDNS')" == 'SmartDNS' ]; then
 			if [ ! -n "$(pgrep -f smartdns)" ]; then
-				button=$button' <button class=button2 title="SmartDNS is not ready...,Restart"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=smartdns&redir=settings">SmartDNS</a></button>'
+				button=$button' <button class=button2 title="SmartDNS is not ready...,Restart"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=smartdns&redir=settings">SmartDNS</a></button>'
 			else
 				button=$button' <button class=button1 title="Goto SmartDNS setting"><a href="/cgi-bin/luci/admin/services/smartdns" target="_blank">SmartDNS</a></button>'
 			fi
 		else
 			if [ "$(uci_get_by_name $NAME $NAME vpntype 'NULL')" == 'NULL' ]; then
-				button=$button' <button class=button3 title="Start SmartDNS"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=smartdns&redir=settings">SmartDNS</a></button>'
+				button=$button' <button class=button3 title="Start SmartDNS"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=smartdns&redir=settings">SmartDNS</a></button>'
 			else
 				button=$button' <button class=button3 title="Start SmartDNS"><a href="/cgi-bin/luci/admin/services/smartdns" target="_blank">SmartDNS</a></button>'
 			fi
@@ -699,13 +718,13 @@ button)
 	if [ -f /etc/init.d/mosdns ]; then
 		if [ "$(uci_get_by_name $NAME $NAME dns 'MosDNS')" == 'MosDNS' ]; then
 			if [ ! -n "$(pgrep -f mosdns)" ]; then
-				button=$button' <button class=button2 title="MosDNS is not ready...,Restart"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=mosdns&redir=settings">MosDNS</a></button>'
+				button=$button' <button class=button2 title="MosDNS is not ready...,Restart"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=mosdns&redir=settings">MosDNS</a></button>'
 			else
 				button=$button' <button class=button1 "Goto MosDNS setting"><a href="/cgi-bin/luci/admin/services/mosdns" target="_blank">MosDNS</a></button>'
 			fi
 		else
 			if [ "$(uci_get_by_name $NAME $NAME vpntype 'NULL')" == 'NULL' ]; then
-				button=$button' <button class=button3 title="Start MosDNS"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=mosdns&redir=settings">MosDNS</a></button>'
+				button=$button' <button class=button3 title="Start MosDNS"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=mosdns&redir=settings">MosDNS</a></button>'
 			else
 				button=$button' <button class=button3 title="Start MosDNS"><a href="/cgi-bin/luci/admin/services/mosdns" target="_blank">MosDNS</a></button>'
 			fi
@@ -720,7 +739,7 @@ wantitle)
 #	gateway=$(uci get network.wan.gateway)
 #	vpn=$(uci_get_by_name $NAME $NAME vpnip '192.168.1.1')
 #	if [ "$vpn" == $gateway ]; then
-#		button='<button class=button1 title="Close VPN"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=CloseVPN&redir=settings">CloseVPN</a></button>'
+#		button='<button class=button1 title="Close VPN"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=CloseVPN&redir=settings">CloseVPN</a></button>'
 #	fi
 	;;
 wan)
@@ -735,13 +754,13 @@ wan)
 		vpn=$(cat /tmp/regvpn|grep $vpnip|cut -d'-' -f3-)
 		vpn=${vpn:2}
 		button=$button'<BR><font color=green>'$name'-'$vpn'</font>'
-		button=$button' <button class=button1 title="Close VPN"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=CloseVPN&redir=settings">CloseVPN</a></button>'
+		button=$button' <button class=button1 title="Close VPN"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=CloseVPN&redir=settings">CloseVPN</a></button>'
 	else
 		button=$button'<font color=6699cc>gateway:'$(uci get network.wan.gateway)' </font><font color=9699cc>dns:'$(uci get network.wan.dns)'</font>'
 	fi
 	;;
 vpnstitle)
-	button='<button class="button1" title="Update VPN connection"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=UpdateVPN&redir=settings">UpdateVPN</a></button>'
+	button='<button class="button1" title="Update VPN connection"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu?sys=UpdateVPN&redir=settings">UpdateVPN</a></button>'
 	;;
 vpns)
 	button=''
@@ -765,7 +784,7 @@ vpns)
 				button=$button'<BR>'
 			else
 				button=$button'<font color='$color'>'$ip'-'$host'-'$name'</font> '
-				button=$button'<button class="button1" title="Select '$host' for VPN service"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sys?sys=selVPN&redir=settings&sys1='$ip'">Sel->'$host'</a></button><BR>'
+				button=$button'<button class="button1" title="Select '$host' for VPN service"><a href="/cgi-bin/luci/admin/sys/sysmonitor/sysmenu1?sys=selVPN&redir=settings&sys1='$ip'">Sel->'$host'</a></button><BR>'
 			fi
 		fi
 	done < /tmp/regvpn
@@ -788,6 +807,15 @@ echo $button
 
 sysmenu() {
 	case $1 in
+	stopdl)
+		stopdl
+		;;
+	firmware)
+		firmware
+		;;
+	sysupgrade)
+		sysupgrade
+		;;
 	ddns)
 		/etc/init.d/ddns start &
 		;;
@@ -1123,9 +1151,6 @@ service_ddns)
 agh)
 	agh
 	;;
-firmware)
-	firmware $1
-	;;
 logup)
 	status=$(cat $SYSLOG|grep "Download Firmware"|wc -l)
 #	if [ "$status" == 0 ]; then
@@ -1134,46 +1159,26 @@ logup)
 	file="/usr/lib/lua/luci/view/sysmonitor/log.htm"
 	sed -i "/cbi-button/d" $file
 #	sed -i "/keeps/d" $file
+	redir='log'
 	if [ "$status" != 0 ]; then
 #		sed -i "/user_fieldset/a\\\t<label for='keeps'><%:Keeps%></label>" $file
 #		sed -i "/user_fieldset/a\\\t<input type='checkbox' id='keeps' name='keeps' />" $file
-		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='sysupgrade?sys=-n' name='Upgrade' value='<%:Upgrade%>' />" $file
-		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='sysupgrade?sys=-c' name='keeps' value='<%:Keeps%>' />" $file
-		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='stopDL' name='Stop' value='<%:Stop%>' />" $file
-		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='firmware' name='Firmware' value='<%:Download%>' />" $file
-#		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='update' name='update' value='<%:Upload%>' />" $file
+		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='sysmenu1?sys=sysupgrade&sys1=-n&redir="$redir"' value='<%:Upgrade%>' />" $file
+		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='sysmenu1?sys=sysupgrade&sys1=-c&redir="$redir"' value='<%:Keeps%>' />" $file
+		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='sysmenu?sys=stopdl&redir="$redir"' value='<%:Stop%>' />" $file
+		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='sysmenu?sys=firmware&redir="$redir"' value='<%:Download%>' />" $file
+#		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='sysmenu?sys=update&redir="$redir"' value='<%:Upload%>' />" $file
 	else
-		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='firmware' name='Firmware' value='<%:Download Firmware%>' />" $file
+		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick=location.href='sysmenu?sys=firmware&redir="$redir"' value='<%:Download Firmware%>' />" $file
 		sed -i "/user_fieldset/a\\\t<input class='cbi-button cbi-input-apply' type='button' onclick='clearlog()' name='clean log' value='<%:Clear logs%>' />" $file
 	fi
 	;;
 chk_vpn)
 	chk_vpn
 	;;
-stopdl)
-	stopdl
-	;;
 killtmp)
 	tmp=$(pgrep -f firstrun)
 	[ -n "$tmp" ] && kill $tmp
-	;;
-sysupgrade)
-	file=$(ls /tmp/upload|grep $device)
-	if [ -n "$file" ]; then
-		if [ "$1" == "-c" ]; then
-			echo 'Upgrade Firmware (keep config)' > $SYSLOG
-		else
-			echo 'Upgrade Firmware' > $SYSLOG
-		fi
-		echo '------------------------------------------------------------------------------------------------------' >> $SYSLOG
-		sysupgrade='sysupgrade '$1' /tmp/upload/'$file
-		echo $sysupgrade >> $SYSLOG
-		$sysupgrade
-	else
-		sed -i '/Download Firmware/,$d' $SYSLOG
-		echolog "Download Firmware"
-		echolog "No sysupgrade file? Please upload $device sysupgrade file or download."
-	fi
 	;;
 chkprog)
 	chk_prog
