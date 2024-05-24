@@ -390,7 +390,7 @@ firmware() {
 		sed -i '/Download Firmware/a\****** Download Firmware is OK.Please Upgrade '$tmp $SYSLOG
 		sed -i '/Download Firmware/a\ ' $SYSLOG
 	else
-		rm /tmp/upload/$tmp
+		[ -f /tmp/upload/$tmp ] && rm /tmp/upload/$tmp
 		sed -i '/Download Firmware/,$d' $SYSLOG
 		echolog "Download Firmware is error! please use vpn & try again."
 	fi
