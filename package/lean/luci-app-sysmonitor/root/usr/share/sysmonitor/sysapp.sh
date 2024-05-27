@@ -1037,6 +1037,11 @@ update_regvpn() {
 	[ "$touch" == 1 ] && touch /tmp/regvpn.sign
 }
 
+chkapp() {
+	[ "$(ps |grep -v grep|grep chkvpn.sh|wc -l)" -gt 1 ] && killall chkvpn.sh
+	[ "$(ps |grep -v grep|grep regvpn.sh|wc -l)" -gt 1 ] && killall regvpn.sh
+}
+
 [ "$(cat /tmp/sysmonitor.pid)" == 0 ] && re_sysmonitor
 arg1=$1
 shift
@@ -1057,6 +1062,7 @@ re_sysmonitor)
 updateregvpn)
 	delay_prog updateregvpn
 	update_regvpn
+	chkapp
 	;;
 chkvpn)
 	delay_prog chkvpn
