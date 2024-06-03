@@ -1041,7 +1041,7 @@ update_regvpn() {
 	[ "$touch" == 1 ] && touch /tmp/regvpn.sign
 }
 
-[ "$(cat /tmp/sysmonitor.pid)" == 0 ] && re_sysmonitor
+[ "$(cat /tmp/sysmonitor.pid)" == 0 ] && $APP_PATH/monitor.sh
 arg1=$1
 shift
 case $arg1 in
@@ -1054,8 +1054,8 @@ sysmenu)
 sysbutton)
 	sysbutton $1
 	;;
-re_sysmonitor)
-	re_sysmonitor
+#re_sysmonitor)
+#	re_sysmonitor
 #	delay_prog re_sysmonitor 1800
 	;;
 updateregvpn)
@@ -1195,20 +1195,6 @@ chkprog)
 	chk_prog
 	chkprog=$(uci_get_by_name $NAME $NAME chkprog 60)
 	echo $chkprog'='$APP_PATH'/sysapps.sh chkprog' >> /tmp/delay.sign
-	;;
-test)
-	progpid='/tmp/chkvpn.pid'
-	arg=$(cat $progpid)
-	case $arg in
-		0)
-			echo "NO"
-			;;
-		1)
-			;;
-		*)
-			echo "KILLALL"
-		;;
-	esac
 	;;
 *)
 	echo "No this function!"
