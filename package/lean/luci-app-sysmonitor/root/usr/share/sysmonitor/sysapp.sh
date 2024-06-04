@@ -1155,7 +1155,6 @@ killtmp)
 	[ -n "$tmp" ] && kill $tmp
 	;;
 chkprog)
-	touch /tmp/test.chkvpn
 	[ -f /tmp/test.regvpn ] && rm /tmp/test.regvpn
 	mast=$(getip)
 	echo '2regvpn-test' |netcat -nc $mast 55555
@@ -1164,7 +1163,6 @@ chkprog)
 	echo $chkprog'='$APP_PATH'/sysapps.sh chkprog' >> /tmp/delay.sign
 	sleep 1
 	[ ! -f /tmp/test.regvpn ] && killall regvpn.sh
-	[ -f /tmp/test.chkvpn ] && killall chkvpn.sh
 	;;
 *)
 	echo "No <"$arg1"> function!"
