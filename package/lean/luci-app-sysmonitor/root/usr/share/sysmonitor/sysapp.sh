@@ -86,6 +86,7 @@ delay_prog() {
 }
 
 chk_prog() {
+
 prog_num=$(cat /etc/config/sysmonitor|grep prog_list|wc -l)
 num=0
 while (($num<$prog_num))
@@ -1154,12 +1155,19 @@ killtmp)
 	[ -n "$tmp" ] && kill $tmp
 	;;
 chkprog)
+	[ -f /tmp/test.regvpn ] && rm /tmp/test.regvpn
+	mast=$(getip)
+	echo '2regvpn-test' |netcat -nc $mast 55555
 	chk_prog
 	chkprog=$(uci_get_by_name $NAME $NAME chkprog 60)
 	echo $chkprog'='$APP_PATH'/sysapps.sh chkprog' >> /tmp/delay.sign
+	sleep 1
+	if [ ! -f /tmp/test.regvpn ]; then
+		killall regvpn.sh
+	fi
 	;;
 *)
-	echo "No this function!"
+	echo "No <"$arg1"> function!"
 	;;
 esac
 exit
