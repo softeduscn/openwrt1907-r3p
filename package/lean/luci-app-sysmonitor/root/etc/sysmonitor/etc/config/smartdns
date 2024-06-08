@@ -6,7 +6,7 @@ config smartdns
 	option port '6053'
 	option prefetch_domain '1'
 	option resolve_local_hostnames '1'
-	option cache_size '10240'
+	option cache_size '2048'
 	option rr_ttl_min '600'
 	option rr_ttl_reply_max '10'
 	option force_https_soa '0'
