@@ -13,7 +13,7 @@ config smartdns
 	option ipv6_server '1'
 	option bind_device '0'
 	option response_mode 'fastest-response'
-	option serve_expired '1'
+	option serve_expired '0'
 	option cache_persist '0'
 	option auto_set_dnsmasq '1'
 	option doh_server_port '843'

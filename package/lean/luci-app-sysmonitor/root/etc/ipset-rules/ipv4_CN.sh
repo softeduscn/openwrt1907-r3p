@@ -768,7 +768,6 @@ ipset add ipv4_CN 43.242.12.0/22
 ipset add ipv4_CN 43.242.16.0/21
 ipset add ipv4_CN 43.242.24.0/22
 ipset add ipv4_CN 43.242.28.0/22
-ipset add ipv4_CN 43.242.44.0/22
 ipset add ipv4_CN 43.242.48.0/22
 ipset add ipv4_CN 43.242.52.0/22
 ipset add ipv4_CN 43.242.56.0/22
@@ -2465,7 +2464,6 @@ ipset add ipv4_CN 103.37.188.0/22
 ipset add ipv4_CN 103.37.208.0/22
 ipset add ipv4_CN 103.37.212.0/22
 ipset add ipv4_CN 103.37.216.0/21
-ipset add ipv4_CN 103.37.248.0/22
 ipset add ipv4_CN 103.37.252.0/22
 ipset add ipv4_CN 103.38.0.0/22
 ipset add ipv4_CN 103.38.32.0/22
@@ -3545,7 +3543,6 @@ ipset add ipv4_CN 103.104.40.0/22
 ipset add ipv4_CN 103.104.64.0/22
 ipset add ipv4_CN 103.104.104.0/22
 ipset add ipv4_CN 103.104.152.0/22
-ipset add ipv4_CN 103.104.168.0/22
 ipset add ipv4_CN 103.104.188.0/22
 ipset add ipv4_CN 103.104.198.0/23
 ipset add ipv4_CN 103.104.252.0/22
@@ -3824,7 +3821,6 @@ ipset add ipv4_CN 103.138.134.0/23
 ipset add ipv4_CN 103.138.156.0/23
 ipset add ipv4_CN 103.138.208.0/23
 ipset add ipv4_CN 103.138.220.0/23
-ipset add ipv4_CN 103.138.246.0/23
 ipset add ipv4_CN 103.138.248.0/23
 ipset add ipv4_CN 103.139.0.0/23
 ipset add ipv4_CN 103.139.2.0/23
@@ -6246,7 +6242,18 @@ ipset add ipv4_CN 160.19.82.0/23
 ipset add ipv4_CN 160.19.208.0/22
 ipset add ipv4_CN 160.19.212.0/22
 ipset add ipv4_CN 160.19.216.0/22
+ipset add ipv4_CN 160.20.16.0/23
+ipset add ipv4_CN 160.20.18.0/23
 ipset add ipv4_CN 160.20.48.0/22
+ipset add ipv4_CN 160.20.130.0/23
+ipset add ipv4_CN 160.22.58.0/23
+ipset add ipv4_CN 160.22.82.0/23
+ipset add ipv4_CN 160.22.148.0/23
+ipset add ipv4_CN 160.22.188.0/23
+ipset add ipv4_CN 160.22.224.0/23
+ipset add ipv4_CN 160.22.230.0/23
+ipset add ipv4_CN 160.22.244.0/23
+ipset add ipv4_CN 160.22.246.0/23
 ipset add ipv4_CN 160.202.60.0/22
 ipset add ipv4_CN 160.202.148.0/22
 ipset add ipv4_CN 160.202.152.0/22
