@@ -593,6 +593,8 @@ ipset add ipv6_CN 2401:a9a0::/32
 ipset add ipv6_CN 2401:aa00::/32
 ipset add ipv6_CN 2401:aa20::/32
 ipset add ipv6_CN 2401:aa40::/32
+ipset add ipv6_CN 2401:ab60::/32
+ipset add ipv6_CN 2401:aba0::/32
 ipset add ipv6_CN 2401:acc0::/32
 ipset add ipv6_CN 2401:ad40::/32
 ipset add ipv6_CN 2401:adc0::/32
