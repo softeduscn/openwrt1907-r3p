@@ -26,6 +26,7 @@ config smartdns
 	option seconddns_port '5335'
 	option seconddns_server_group 'oversea'
 	option log_output_mode 'file'
+	option mdns_lookup '1'
 
 config server
 	option name 'PDNS'
