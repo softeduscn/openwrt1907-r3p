@@ -6255,6 +6255,7 @@ ipset add ipv4_CN 160.22.246.0/23
 ipset add ipv4_CN 160.25.10.0/23
 ipset add ipv4_CN 160.25.12.0/23
 ipset add ipv4_CN 160.25.20.0/23
+ipset add ipv4_CN 160.25.194.0/23
 ipset add ipv4_CN 160.202.60.0/22
 ipset add ipv4_CN 160.202.148.0/22
 ipset add ipv4_CN 160.202.152.0/22
