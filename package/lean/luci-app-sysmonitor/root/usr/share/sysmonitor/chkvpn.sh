@@ -76,11 +76,11 @@ while [ "1" == "1" ]; do
 				#if [ "$i" == "sysmonitor" ] && [ "$chknum" -ge 60 ]; then
 				if [ "$chknum" -ge 60 ]; then
 					chknum=0
+					chksys=0
 					if [ ! -f /tmp/test.$i ]; then	
 						killall $progsh
 					else
-						rm /tmp/test.$i
-						chksys=0
+						rm /tmp/test.$i	
 					fi
 				fi
 				;;
