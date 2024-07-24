@@ -610,6 +610,7 @@ ipset add ipv6_CN 2401:b4c0::/32
 ipset add ipv6_CN 2401:b4e0::/32
 ipset add ipv6_CN 2401:b540::/32
 ipset add ipv6_CN 2401:b580::/32
+ipset add ipv6_CN 2401:b5a0::/32
 ipset add ipv6_CN 2401:b600::/32
 ipset add ipv6_CN 2401:b680::/32
 ipset add ipv6_CN 2401:b6c0::/32
