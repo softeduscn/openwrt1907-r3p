@@ -6,7 +6,7 @@ config smartdns
 	option port '6053'
 	option prefetch_domain '1'
 	option resolve_local_hostnames '1'
-	option cache_size '2048'
+	option cache_size '512'
 	option rr_ttl_min '600'
 	option rr_ttl_reply_max '10'
 	option force_https_soa '0'
@@ -23,7 +23,7 @@ config smartdns
 	option dualstack_ip_selection '1'
 	option seconddns_enabled '1'
 	option seconddns_tcp_server '1'
-	option seconddns_port '5335'
+	option seconddns_port '8653'
 	option seconddns_server_group 'oversea'
 	option log_output_mode 'file'
 	option mdns_lookup '1'
@@ -35,34 +35,10 @@ config server
 	option enabled '1'
 
 config server
-	option name 'ALIDNS'
-	option ip '223.5.5.5'
-	option type 'udp'
-	option enabled '1'
-
-config server
-	option name '114DNS'
-	option ip '114.114.114.114'
-	option type 'udp'
-	option enabled '1'
-
-config server
-	option enabled '1'
-	option type 'tcp'
 	option name 'PDNS'
 	option ip '119.29.29.29'
-
-config server
-	option enabled '1'
 	option type 'tcp'
-	option name 'ALDNS'
-	option ip '223.5.5.5'
-
-config server
 	option enabled '1'
-	option type 'tcp'
-	option name '114DNS'
-	option ip '114.114.114.114'
 
 config server
 	option name 'PDNS'
@@ -78,6 +54,14 @@ config server
 	option enabled '1'
 	option exclude_default_group '1'
 	option ip '223.6.6.6'
+	option server_group 'china'
+
+config server
+	option name 'BaiduDNS'
+	option ip '180.76.76.76'
+	option type 'udp'
+	option enabled '1'
+	option exclude_default_group '1'
 	option server_group 'china'
 
 config server
@@ -102,6 +86,14 @@ config server
 	option type 'tcp'
 	option exclude_default_group '1'
 	option ip '223.6.6.6'
+	option server_group 'china'
+
+config server
+	option name 'BaiduDNS'
+	option ip '180.76.76.76'
+	option type 'tcp'
+	option enabled '1'
+	option exclude_default_group '1'
 	option server_group 'china'
 
 config server

@@ -19,8 +19,9 @@ config sysmonitor 'sysmonitor'
 	option dhcp '0'
 	list vpn '192.168.1.1'
 	list dnslist '119.29.29.29'
-	list dnslist '223.5.5.5'
 	list dnslist '180.76.76.76'
+	list dnslist '114.114.115.115'
+	list dnslist '223.5.5.5'
 	option firmware 'https://github.com/softeduscn/openwrt1907-r3p/releases/download/MI-R3P/openwrt-ramips-mt7621-xiaomi_mir3p-squashfs-sysupgrade.bin'
 
 config host_list
