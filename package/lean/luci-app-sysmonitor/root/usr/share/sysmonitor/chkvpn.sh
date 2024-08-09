@@ -66,6 +66,8 @@ while [ "1" == "1" ]; do
 		arg=$(cat $progpid)
 		case $arg in
 			0)
+				chksys=0
+				chknum=0
 				[ "$(pgrep -f $progsh|wc -l)" != 0 ] && killall $progsh
 				progrun='/tmp/'$i'.run'
 				[ -f $progrun ] && rm $progrun
